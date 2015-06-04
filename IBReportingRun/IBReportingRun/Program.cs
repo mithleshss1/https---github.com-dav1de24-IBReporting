@@ -116,20 +116,30 @@ namespace IBReportingRun
 
         static void UpdateTableOnDB(SqlConnection conn, string stProc, string tblName, DataTable appT)
         {
-            SqlCommand insertCommand = new SqlCommand(
-                stProc, conn);
-            insertCommand.CommandType = CommandType.StoredProcedure;
+            try
+            {
+                SqlCommand insertCommand = new SqlCommand(
+                    stProc, conn);
+                insertCommand.CommandType = CommandType.StoredProcedure;
 
-            SqlParameter tvpParam = insertCommand.Parameters.AddWithValue(
-                tblName, appT);
-            tvpParam.SqlDbType = SqlDbType.Structured;
+                SqlParameter tvpParam = insertCommand.Parameters.AddWithValue(
+                    tblName, appT);
+                tvpParam.SqlDbType = SqlDbType.Structured;
 
-            conn.Open();
+                conn.Open();
 
-            // Execute the command.
-            insertCommand.ExecuteNonQuery();
+                // Execute the command.
+                insertCommand.ExecuteNonQuery();
 
-            conn.Close();
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                //throw e;
+                //send mail to support@appianroad.com specifying error
+                SendMail("Test IBReporting Error!", "Update Process Failed for " + tblName + ". " + e.ToString(), Emails);
+                Environment.Exit(0);
+            }
         }
 
         //Cycle through XML report, parse data into tmpTables and push them to AccountMgmt DB
@@ -471,7 +481,7 @@ namespace IBReportingRun
             {
                 //Set connection string parameter
                 string connectionString = "";
-                
+
                 if (dbUsed == "Test")
                 {
                     connectionString = ConfigurationManager.ConnectionStrings["AccountMgmtcon"].ToString();
@@ -511,50 +521,59 @@ namespace IBReportingRun
                     XmlNode node = root.SelectSingleNode("ReferenceCode");
                     if (node != null)
                     {
-                        string referenceCode = node.InnerText;
+                        string referenceCode = node != null ? node.InnerText : "";
 
-
-                        //Construct flex query report URL
-                        flexURL = "https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=" + referenceCode + "&t=" + ConvertToUnsecureString(flexToken) + "&v=3";
-
-                        //Hit flex web-service to pull the full report
-                        XmlDocument docReport = new XmlDocument();
-
-                        int counter = 0;
-                        string xmlStr = "";
-
-                        while (true)
+                        if (!string.IsNullOrEmpty(referenceCode))
                         {
-                            if (counter > 49)
+                            //Construct flex query report URL
+                            flexURL = "https://gdcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement?q=" + referenceCode + "&t=" + ConvertToUnsecureString(flexToken) + "&v=3";
+
+                            //Hit flex web-service to pull the full report
+                            XmlDocument docReport = new XmlDocument();
+
+                            int counter = 0;
+                            string xmlStr = "";
+
+                            while (true)
                             {
-                                SendMail("Test IBReporting Error!", "No data found at 49 attempt!", Emails);
-                                break;
-                            }
-                            else
-                            {
-                                using (var wc = new WebClient())
+                                if (counter > 49)
                                 {
-                                    xmlStr = wc.DownloadString(flexURL);
-                                }
-                                docReport.Load(flexURL);
-                                XmlElement rootdata = docReport.DocumentElement;
-                                XmlNode nodes = rootdata.SelectSingleNode("ErrorCode");
-                                if (nodes != null)
-                                {
-                                    counter = counter + 1;
-                                    System.Threading.Thread.Sleep(2000);
-                                    continue;
+                                    SendMail("Test IBReporting Error!", "No data found at 49 attempt!", Emails);
+                                    break;
                                 }
                                 else
                                 {
-                                    break;
+                                    using (var wc = new WebClient())
+                                    {
+                                        xmlStr = wc.DownloadString(flexURL);
+                                    }
+                                    docReport.Load(flexURL);
+                                    XmlElement rootdata = docReport.DocumentElement;
+                                    XmlNode nodes = rootdata.SelectSingleNode("ErrorCode");
+                                    if (nodes != null)
+                                    {
+                                        counter = counter + 1;
+                                        System.Threading.Thread.Sleep(2000);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
                                 }
                             }
+                            if (counter < 49)
+                            {
+                                //Cycle through each Account and store the data into the AccountMgmt Database
+                                ProcessXMLResult(conn, docReport);
+                            }
                         }
-                        if (counter < 49)
+                        else
                         {
-                            //Cycle through each Account and store the data into the AccountMgmt Database
-                            ProcessXMLResult(conn, docReport);
+                            //throw e;
+                            //send mail to support@appianroad.com specifying error
+                            SendMail("Test IBReporting Error!", "referenceCode not found", Emails);
+                            Environment.Exit(0);
                         }
                     }
                     else
