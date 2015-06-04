@@ -1,0 +1,15 @@
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\bin\Release\IBReportingRun.exe.config
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\bin\Release\IBReportingRun.exe
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\bin\Release\IBReportingRun.pdb
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.csprojResolveAssemblyReference.cache
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.exe
+C:\Users\Davide\Dropbox\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.pdb
+C:\Users\Davide\Dropbox\DaVinci's corner\Release\IBReportingRun.exe.config
+C:\Users\Davide\Dropbox\DaVinci's corner\Release\IBReportingRun.exe
+C:\Users\Davide\Dropbox\DaVinci's corner\Release\IBReportingRun.pdb
+C:\Users\Davide\Dropbox (Personal)\DaVinci's corner\Release\IBReportingRun.exe.config
+C:\Users\Davide\Dropbox (Personal)\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.exe
+C:\Users\Davide\Dropbox (Personal)\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.pdb
+C:\Users\Davide\Dropbox (Personal)\DaVinci's corner\Release\IBReportingRun.exe
+C:\Users\Davide\Dropbox (Personal)\DaVinci's corner\Release\IBReportingRun.pdb
+C:\Users\Davide\Dropbox (Personal)\Appian Road\Technology\Client Reporting\IBReportingRun\IBReportingRun\obj\Release\IBReportingRun.csprojResolveAssemblyReference.cache
